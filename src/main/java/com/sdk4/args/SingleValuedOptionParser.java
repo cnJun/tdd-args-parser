@@ -18,14 +18,28 @@ class SingleValuedOptionParser<T> implements OptionParser<T> {
         if (index == -1) {
             return defaultValue;
         }
-        if (index + 1 == arguments.size() || arguments.get(index + 1).startsWith("-")) {
+
+        if (isReachEndOfList(arguments, index)
+                || isFollowedByOtherFlag(arguments, index)) {
             throw new InsufficientArgumentsException(option.value());
         }
-        if (index + 2 < arguments.size() && !arguments.get(index + 2).startsWith("-")) {
+        if (secondArgumentIsNotAFlag(arguments, index)) {
             throw new TooManyArgumentsException(option.value());
         }
         String value = arguments.get(index + 1);
         return valueParser.apply(value);
+    }
+
+    private boolean secondArgumentIsNotAFlag(List<String> arguments, int index) {
+        return index + 2 < arguments.size() && !arguments.get(index + 2).startsWith("-");
+    }
+
+    private boolean isFollowedByOtherFlag(List<String> arguments, int index) {
+        return arguments.get(index + 1).startsWith("-");
+    }
+
+    private boolean isReachEndOfList(List<String> arguments, int index) {
+        return index + 1 == arguments.size();
     }
 
 }
