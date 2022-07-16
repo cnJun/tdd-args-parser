@@ -7,6 +7,7 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Args {
@@ -33,8 +34,8 @@ public class Args {
 
     static {
         PARSERS.put(boolean.class, new BooleanOptionParser());
-        PARSERS.put(int.class, new SingleValuedOptionParser<>(Integer::parseInt));
-        PARSERS.put(String.class, new SingleValuedOptionParser<>(String::valueOf));
+        PARSERS.put(int.class, new SingleValuedOptionParser<>(0, Integer::parseInt));
+        PARSERS.put(String.class, new SingleValuedOptionParser<>("", String::valueOf));
     }
 
 }
