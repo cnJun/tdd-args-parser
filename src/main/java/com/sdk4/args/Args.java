@@ -32,7 +32,7 @@ public class Args {
     private static Map<Class<?>, OptionParser> PARSERS = Maps.newHashMap();
 
     static {
-        PARSERS.put(boolean.class, new BooleanParser());
+        PARSERS.put(boolean.class, new BooleanOptionParser());
         PARSERS.put(int.class, new SingleValuedOptionParser<>(Integer::parseInt));
         PARSERS.put(String.class, new SingleValuedOptionParser<>(String::valueOf));
     }
