@@ -14,4 +14,5 @@ public class ArgsTest {
         options.logging();
         options.port();
     }
+
 }
