@@ -33,8 +33,8 @@ public class Args {
 
     static {
         PARSERS.put(boolean.class, new BooleanParser());
-        PARSERS.put(int.class, new IntOptionParser());
-        PARSERS.put(String.class, new StringOptionParser());
+        PARSERS.put(int.class, new SingleValuedOptionParser<>(Integer::parseInt));
+        PARSERS.put(String.class, new SingleValuedOptionParser<>(String::valueOf));
     }
 
 }
