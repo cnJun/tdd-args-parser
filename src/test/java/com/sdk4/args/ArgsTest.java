@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ArgsTest {
 
+    @Disabled
     @Test
     void should_parse_multi_options() {
         MultiOptions options = Args.parse(MultiOptions.class, "-l", "-p", "8080", "-d", "/usr/logs");

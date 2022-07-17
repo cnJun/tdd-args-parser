@@ -1,7 +1,9 @@
 package com.sdk4.args;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 class SingleValuedOptionParser<T> implements OptionParser<T> {
     Function<String, T> valueParser;
@@ -14,32 +16,37 @@ class SingleValuedOptionParser<T> implements OptionParser<T> {
 
     @Override
     public T parse(List<String> arguments, Option option) {
+        return values(arguments, option, 1).map(it -> parseValue(option, it.get(0))).orElse(defaultValue);
+    }
+
+    static Optional<List<String>> values(List<String> arguments, Option option, int expectedSize) {
         int index = arguments.indexOf("-" + option.value());
         if (index == -1) {
-            return defaultValue;
+            return Optional.empty();
         }
-
-        if (isReachEndOfList(arguments, index)
-                || isFollowedByOtherFlag(arguments, index)) {
+        List<String> values = values(arguments, index);
+        if (values.size() < expectedSize) {
             throw new InsufficientArgumentsException(option.value());
         }
-        if (secondArgumentIsNotAFlag(arguments, index)) {
+        if (values.size() > expectedSize) {
             throw new TooManyArgumentsException(option.value());
         }
-        String value = arguments.get(index + 1);
-        return valueParser.apply(value);
+        return Optional.of(values);
     }
 
-    private boolean secondArgumentIsNotAFlag(List<String> arguments, int index) {
-        return index + 2 < arguments.size() && !arguments.get(index + 2).startsWith("-");
+    private T parseValue(Option option, String value) {
+        try {
+            return valueParser.apply(value);
+        } catch (Exception e) {
+            throw new IllegalValueException(option.value(), value);
+        }
     }
 
-    private boolean isFollowedByOtherFlag(List<String> arguments, int index) {
-        return arguments.get(index + 1).startsWith("-");
-    }
-
-    private boolean isReachEndOfList(List<String> arguments, int index) {
-        return index + 1 == arguments.size();
+    static List<String> values(List<String> arguments, int index) {
+        return arguments.subList(index + 1, IntStream.range(index + 1, arguments.size())
+                .filter(it -> arguments.get(it).startsWith("-"))
+                .findFirst()
+                .orElse(arguments.size()));
     }
 
 }

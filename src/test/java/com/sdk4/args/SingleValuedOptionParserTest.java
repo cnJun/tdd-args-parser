@@ -34,7 +34,7 @@ public class SingleValuedOptionParserTest {
 
     // default value
     @Test
-    void should_set_default_value_to_0_for_int_option() {
+    void should_set_default_value_for_option() {
         Function<String, Object> whatever = (it) -> null;
         Object defaultValue = new Object();
         assertSame(defaultValue, new SingleValuedOptionParser<>(defaultValue, whatever).parse(Arrays.asList(), option("p")));

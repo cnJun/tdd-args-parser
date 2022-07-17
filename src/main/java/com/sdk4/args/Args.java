@@ -18,7 +18,6 @@ public class Args {
             Object[] values = Arrays.stream(constructor.getParameters())
                     .map(it -> parseOption(arguments, it))
                     .toArray();
-
             return (T) constructor.newInstance(values);
         } catch (IllegalOptionException e) {
             throw e;
@@ -31,6 +30,9 @@ public class Args {
         if (!parameter.isAnnotationPresent(Option.class)) {
             throw new IllegalOptionException(parameter.getName());
         }
+
+        Option option = parameter.getAnnotation(Option.class);
+
         return PARSERS.get(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
     }
 
