@@ -39,9 +39,9 @@ public class Args {
     private static Map<Class<?>, OptionParser> PARSERS = Maps.newHashMap();
 
     static {
-        PARSERS.put(boolean.class, new BooleanOptionParser());
-        PARSERS.put(int.class, new SingleValuedOptionParser<>(0, Integer::parseInt));
-        PARSERS.put(String.class, new SingleValuedOptionParser<>("", String::valueOf));
+        PARSERS.put(boolean.class, OptionParsers.bool());
+        PARSERS.put(int.class, OptionParsers.unary(0, Integer::parseInt));
+        PARSERS.put(String.class, OptionParsers.unary("", String::valueOf));
     }
 
 }
