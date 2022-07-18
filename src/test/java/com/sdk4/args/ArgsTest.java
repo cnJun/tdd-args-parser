@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ArgsTest {
 
-    @Disabled
     @Test
     void should_parse_multi_options() {
         MultiOptions options = Args.parse(MultiOptions.class, "-l", "-p", "8080", "-d", "/usr/logs");
@@ -47,19 +46,18 @@ class ArgsTest {
     }
 
     @Test
-    @Disabled
     void should_example_2() {
         ListOptions options = Args.parse(ListOptions.class, "-g", "this", "is", "a", "list", "-d", "1", "2", "-3", "5");
 
         assertArrayEquals(new String[]{"this", "is", "a", "list"}, options.group);
-        assertArrayEquals(new int[]{1, 2, -3, 5}, options.decimals);
+        assertArrayEquals(new Integer[]{1, 2, -3, 5}, options.decimals);
     }
 
     public static class ListOptions {
         public String[] group;
-        public int[] decimals;
+        public Integer[] decimals;
 
-        public ListOptions(@Option("g") String[] group, @Option("d") int[] decimals) {
+        public ListOptions(@Option("g") String[] group, @Option("d") Integer[] decimals) {
             this.group = group;
             this.decimals = decimals;
         }

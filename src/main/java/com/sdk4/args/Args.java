@@ -22,6 +22,7 @@ public class Args {
         } catch (IllegalOptionException e) {
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -30,8 +31,6 @@ public class Args {
         if (!parameter.isAnnotationPresent(Option.class)) {
             throw new IllegalOptionException(parameter.getName());
         }
-
-        Option option = parameter.getAnnotation(Option.class);
 
         return PARSERS.get(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
     }
@@ -42,6 +41,8 @@ public class Args {
         PARSERS.put(boolean.class, OptionParsers.bool());
         PARSERS.put(int.class, OptionParsers.unary(0, Integer::parseInt));
         PARSERS.put(String.class, OptionParsers.unary("", String::valueOf));
+        PARSERS.put(String[].class, OptionParsers.list(String[]::new, String::valueOf));
+        PARSERS.put(Integer[].class, OptionParsers.list(Integer[]::new, Integer::parseInt));
     }
 
 }

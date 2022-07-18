@@ -6,13 +6,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SingleValuedOptionParserTest {
+public class OptionParsersTest {
 
     @Nested
     class UnaryOptionParser {
@@ -100,8 +99,12 @@ public class SingleValuedOptionParserTest {
     class ListOptionParser {
         @Test
         void should_parse_list_value() {
-            String[] value = OptionParsers.list(String[]::new, String::valueOf).parse(asList("-g", "this", "is"), option("g"));
-            assertArrayEquals(new String[]{"this", "is"}, value);
+            assertArrayEquals(new String[]{"this", "is"}, OptionParsers.list(String[]::new, String::valueOf).parse(asList("-g", "this", "is"), option("g")));
+        }
+
+        @Test
+        void should_not_treat_negative_int_as_flag() {
+            assertArrayEquals(new Integer[]{-1, -2}, OptionParsers.list(Integer[]::new, Integer::parseInt).parse(asList("-g", "-1", "-2"), option("g")));
         }
 
         @Test
