@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 
-class OptionParsers {
+public class OptionParsers {
     public static OptionParser<Boolean> bool() {
         return (arguments, option)
                 -> values(arguments, option, 0).map(it -> true).orElse(false);

@@ -4,12 +4,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 public class OptionParsersTest {
 
@@ -60,6 +64,11 @@ public class OptionParsersTest {
             Object whatever = new Object();
 
             assertSame(parsed, OptionParsers.unary(whatever, parse).parse(asList("-p", "8080"), option("p")));
+
+            Function parser = mock(Function.class);
+            OptionParsers.unary(any(), parser).parse(asList("-p", "8080"), option("p"));
+
+            verify(parser).apply("8080");
         }
     }
 
@@ -99,7 +108,14 @@ public class OptionParsersTest {
     class ListOptionParser {
         @Test
         void should_parse_list_value() {
-            assertArrayEquals(new String[]{"this", "is"}, OptionParsers.list(String[]::new, String::valueOf).parse(asList("-g", "this", "is"), option("g")));
+//            assertArrayEquals(new String[]{"this", "is"}, OptionParsers.list(String[]::new, String::valueOf).parse(asList("-g", "this", "is"), option("g")));
+
+            Function parser = mock(Function.class);
+            OptionParsers.list(String[]::new, parser).parse(asList("-g", "this", "is"), option("g"));
+
+            InOrder order = inOrder(parser, parser);
+            order.verify(parser).apply("this");
+            order.verify(parser).apply("is");
         }
 
         @Test
