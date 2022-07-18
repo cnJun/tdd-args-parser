@@ -8,4 +8,12 @@ public class IllegalValueException extends RuntimeException {
         this.option = option;
         this.value = value;
     }
+
+    public String getOption() {
+        return option;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
